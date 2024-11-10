@@ -4,7 +4,8 @@ def read_positive(file_path):
     positive = {}
     with open(file_path, mode='r') as file:
         csv_reader = csv.reader(file)
-        next(csv_reader)  # Skip header
+        # skip header
+        next(csv_reader)
         for row in csv_reader:
             category, attribute = row
             if category in positive:
@@ -17,7 +18,8 @@ def read_negative(file_path):
     negative = {}
     with open(file_path, mode='r') as file:
         csv_reader = csv.reader(file)
-        next(csv_reader)  # Skip header
+        # skip header
+        next(csv_reader)
         for row in csv_reader:
             category, attribute = row
             if category in negative:
@@ -47,7 +49,12 @@ def sentiment_analysis(email_path, positive, negative):
     positive_score = 0
     negative_score = 0
     with open(email_path, mode='r') as file:
+        # read the email and convert to lowercase and split by space
+        # remove all the special characters
+
         email = file.read().lower().split()
+        email = [word.strip('.,!?*') for word in email]
+
         for word in email:
             for key, value in positive.items():
                 if word in value:
@@ -64,4 +71,4 @@ def sentiment_analysis(email_path, positive, negative):
 
 positive = read_positive('positive.csv')
 negative = read_negative('negative.csv')
-sentiment_analysis('EASTEREGG.txt', positive, negative)
+sentiment_analysis('pos_email.txt', positive, negative)
