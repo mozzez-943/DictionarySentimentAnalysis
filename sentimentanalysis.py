@@ -10,11 +10,11 @@ def read_csv(file_path):
         # skip header
         next(csv_reader)
         for row in csv_reader:
-            category, attribute = row
+            category, word = row
             if category in dictionary:
-                dictionary[category].append(attribute)
+                dictionary[category].append(word)
             else:
-                dictionary[category] = [attribute]
+                dictionary[category] = [word]
     return dictionary
 
 """
@@ -58,8 +58,9 @@ def sentiment_analysis(email_path, positive, negative):
     print(f'Negative score: {negative_score}')
     print(f'Overall sentiment score: {sentiment_score}')
 
-# we call our first function for both the positive and negative dictionaries
+"""
+### Task 3: Run the Code! ###
+"""
 positive = read_csv('positive.csv')
 negative = read_csv('negative.csv')
-# we call our second function to perform sentiment analysis on the email
 sentiment_analysis('pos_email.txt', positive, negative)
