@@ -1,60 +1,48 @@
 import csv
 
-def read_positive(file_path):
-    positive = {}
+"""
+### Task 1: Read From the CSV Files and Populate the Dictionaries ###
+"""
+def read_csv(file_path):
+    dictionary = {}
     with open(file_path, mode='r') as file:
         csv_reader = csv.reader(file)
         # skip header
         next(csv_reader)
         for row in csv_reader:
             category, attribute = row
-            if category in positive:
-                positive[category].append(attribute)
+            if category in dictionary:
+                dictionary[category].append(attribute)
             else:
-                positive[category] = [attribute]
-    return positive
-
-def read_negative(file_path):
-    negative = {}
-    with open(file_path, mode='r') as file:
-        csv_reader = csv.reader(file)
-        # skip header
-        next(csv_reader)
-        for row in csv_reader:
-            category, attribute = row
-            if category in negative:
-                negative[category].append(attribute)
-            else:
-                negative[category] = [attribute]
-    return negative
+                dictionary[category] = [attribute]
+    return dictionary
 
 """
-Reading the email.txt file and outputting the sentiment of the email.
+### Task 2: Complete the Sentiment Analysis ###
 
-We want to convert the email into a list of words and then check if the words
-are in the positive or negative dictionary.
+Given a txt file, we want to output the overall sentiment of the email.
 
-If the word is in the positive dictionary, we increment the positive sentiment
-score by 1. If the word is in the negative dictionary, we increment the
-negative sentiment score by 1.
+1. First, we convert the text into a list of words. To ensure that we can match
+the words to the positive and negative dictionaries, we convert all the words
+to lowercase and remove any special characters (e.g. punctuation).
 
-We will also give an overall sentiment score based on the difference between
-the positive and negative sentiment scores.
+2. If the word is in the positive dictionary, we increment the positive
+sentiment score by 1. Similarly, if the word is in the negative dictionary, we
+instead increment the negative sentiment score by 1.
 
-We will also reflect which key the words belong to in the positive and negative
-dictionary.
+3. Once we have parsed through the email, an overall sentiment score is
+generated based on the difference between the positive and negative sentiment
+scores.
 """
 
 def sentiment_analysis(email_path, positive, negative):
     positive_score = 0
     negative_score = 0
     with open(email_path, mode='r') as file:
-        # read the email and convert to lowercase and split by space
-        # remove all the special characters
-
+        # step 1: convert the email into a list of words
         email = file.read().lower().split()
         email = [word.strip('.,!?*') for word in email]
-
+        # step 2: check if the word is in the positive or negative dictionary
         for word in email:
             for key, value in positive.items():
                 if word in value:
@@ -64,11 +52,14 @@ def sentiment_analysis(email_path, positive, negative):
                 if word in value:
                     negative_score += 1
                     print(f'-1: {word} is in the {key} category.')
+    # step 3: calculate the overall sentiment score and output the results
     sentiment_score = positive_score - negative_score
     print(f'Positive score: {positive_score}')
     print(f'Negative score: {negative_score}')
     print(f'Overall sentiment score: {sentiment_score}')
 
-positive = read_positive('positive.csv')
-negative = read_negative('negative.csv')
+# we call our first function for both the positive and negative dictionaries
+positive = read_csv('positive.csv')
+negative = read_csv('negative.csv')
+# we call our second function to perform sentiment analysis on the email
 sentiment_analysis('pos_email.txt', positive, negative)
